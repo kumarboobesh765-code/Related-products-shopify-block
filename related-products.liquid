@@ -1,0 +1,93 @@
+{%- if product.collections.size > 0 -%}
+  {%- assign related_collection = product.collections.first -%}
+{%- endif -%}
+
+{%- if related_collection != blank -%}
+  {%- style -%}
+    .rp-wrapper {
+      margin-top: 40px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(var(--color-foreground), 0.1);
+    }
+    .rp-title {
+      color: rgb(var(--color-foreground));
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin: 0 0 16px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .rp-scroll {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    .rp-card {
+      min-width: 160px;
+      width: 160px;
+      flex-shrink: 0;
+      background: rgb(var(--color-background));
+      border: 1px solid rgba(var(--color-foreground), 0.1);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .rp-img-box {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+    }
+    .rp-img-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .rp-info {
+      padding: 10px;
+    }
+    .rp-name {
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin: 0 0 5px;
+      color: rgb(var(--color-foreground));
+      text-decoration: none;
+    }
+    .rp-price {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin: 0;
+    }
+    .rp-card a {
+      text-decoration: none;
+      color: inherit;
+    }
+  {%- endstyle -%}
+
+  <div class="rp-wrapper">
+    <h2 class="rp-title">Related Products</h2>
+    <div class="rp-scroll">
+      {%- assign shown_products = 0 -%}
+      {%- assign max_products = 8 -%}
+
+      {%- for rp in related_collection.products -%}
+        {%- if rp.id != product.id and shown_products < max_products -%}
+          {%- assign shown_products = shown_products | plus: 1 -%}
+
+          <div class="rp-card">
+            <a href="{{ rp.url }}">
+              <div class="rp-img-box">
+                {%- if rp.featured_image -%}
+                  {{ rp.featured_image | image_url: width: 400 | image_tag: loading: 'lazy' }}
+                {%- endif -%}
+              </div>
+              <div class="rp-info">
+                <p class="rp-name">{{ rp.title }}</p>
+                <p class="rp-price">{{ rp.price | money }}</p>
+              </div>
+            </a>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+{%- endif -%}
